@@ -444,6 +444,54 @@
         }
       }
     }
+    &.password-extended {
+      margin-bottom: 0;
+      background: #fff;
+      .transition(all ease 0.3s);
+      &.open {
+        background: #f8f8f8;
+        border-top: 1px solid #ddd !important;
+        .box-shadow(inset 0 4px 5px -3px #e0e0e0); 
+      }
+      label {
+        float: left;
+      }
+      .change-btn {
+        &:hover {
+          cursor: pointer;
+        }
+      }
+      .password-change-holder {
+        padding: 0 10px 10px 110px;
+        width: 100%;
+        .box-sizing(border-box);
+
+        .input-holder {
+          margin-bottom: 5px;
+          .top-label {
+            display: block;
+            color: #666;
+            height: 22px;
+          }
+          input {
+            border: 1px solid #cecece !important;
+            background: #fff;
+            margin-left: 0;
+            width: 100%;
+            text-decoration: none;
+          }
+        }
+        .action-buttons {
+          text-align: right;
+          padding: 10px 0;
+        }
+        .error {
+          .alert {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
     p.info-editable {
       margin: 0;
     }
@@ -1084,57 +1132,20 @@ Profile page styles
   position: absolute;
   left: 0;
   top: 0;
-  width: 740px;
+  width: 500px;
   bottom: 0;
   background: #fff;
   padding: 30px 20px 0 30px;
-  .box-shadow(2px 0 3px 0 #f0f0f0);
-  
-  .profile-pic {
-    width: 200px;
-    height: auto;
-    float: left;
-    overflow: hidden;
-    .border-radius(3px);
-    figure {
-      width: 200px;
-      max-width: 200px;
-      min-height: 200px;
-      background: #f0f0f0;
-      text-align: center;
-        img {
-        	width: auto;
-        	max-width: 200px;
-        	height: auto;
-        }
-    }
-    .change-photo {
-      display: block;
-      background-color: rgba(55,152,180,0.6);
-      color: #fff;
-      height: 27px;
-      line-height: 27px;
-      margin-top: -27px;
-      text-transform: uppercase;
-      font-size: 11px;
-      text-decoration: none;
-      text-align: center;
-      &:hover {
-        cursor:pointer;
-        background-color: rgba(55,152,180,0.8);
-      }
-    }
-  }
+  .box-shadow(2px 0 3px 0 #f0f0f0);  
 
   .profile-info {
-    margin-left: 230px; 
     .header-info {
       height: auto;
       margin: 0;
     }
     .details-info { //overriding styles from users tab above
-      left:260px;
-      top:140px;
+      left:30px;
+      top:160px;
     }
   }
 
@@ -1142,7 +1153,7 @@ Profile page styles
 
 .profile-activity-container {
   position: absolute;
-  left: 790px;
+  left: 550px;
   right: 0;
   top: 0;
   bottom: 0;
