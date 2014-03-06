@@ -31,5 +31,37 @@ define(['lodash', 'angular'], function(_, angular) {
                 });
             }
         };
+
+        //password change
+        $scope.passwordEqual = true;
+        $scope.passwordValid = true;
+
+        function validFormat(string) {
+            if (string && string.length >= 6 && string.length <= 20) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        $scope.changePassword = function() {
+            if (validFormat($scope.user.passwordCurrent) && validFormat($scope.user.passwordNew) &&
+                validFormat($scope.user.passwordNewConfirm)) {
+                //format validation
+                $scope.passwordValid = true;
+
+                //equality check
+                if ($scope.user.passwordNew !== $scope.user.passwordNewConfirm) {
+                    $scope.passwordEqual = false;
+                } else {
+                    $scope.passwordEqual = true;
+
+                    //TODO : change request to server
+                }
+            } else {
+                $scope.passwordValid = false;
+            }
+        };
+
     }];
 });
