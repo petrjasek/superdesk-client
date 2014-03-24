@@ -76,7 +76,7 @@
 
                 <div sd-info-item class="password" ng-if="!user.Id">
                   <label for="passwordConfirm" translate>password (again)</label>
-                  <input type="password" name="passwordConfirm" ng-minlength="5" id="passwordConfirm" sd-password-confirm ng-model="user.passwordConfirm" data-password="user.Password" required>
+                  <input type="password" name="passwordConfirm" id="passwordConfirm" sd-password-confirm ng-model="user.passwordConfirm" data-password="user.Password" required>
                   <div ng-show="userForm.passwordConfirm.$error.confirm" translate>passwords must be same.</div>
                 </div>
 
@@ -94,4 +94,37 @@
     </div>
   </div>
 </form>
+
+
+  <div sd-change-password class="password-extended" ng-if="user.Id" ng-class="{open: show.password}">
+    <label for="password" translate>password</label>
+
+    <i class="change-btn" ng-click="show.password = !show.password" ng-show="!show.password">change password</i>
+
+    <div class="password-change-holder" ng-if="show.password">
+
+      <form name="passwordForm">
+
+        <label translate>current</label>
+        <input name="old" type="password" ng-model="oldPwd" required>
+        <p class="alert alert-error" ng-show="oldPasswordInvalid">sorry, but this is not the original password.</p>
+
+        <label translate>new</label>
+        <input name="new" type="password" ng-model="newPwd" required ng-minlength="5">
+        <p class="alert alert-error" ng-show="passwordForm.new.$error.minlength">please provide password at least 5 characters long.</p>
+
+        <label translate>confirm</label>
+        <input name="confirm" type="password" ng-model="_confirm" required
+          sd-password-confirm ng-model="_confirm" data-password="newPwd">
+        <p class="alert alert-error" ng-show="passwordForm.confirm.$error.confirm">confirm doesn't match new password yet.</p>
+
+        <div class="action-buttons">
+          <button type="reset" class="btn btn-small" ng-click="show.password = false" translate>Cancel</button>
+          <button type="submit" class="btn btn-info btn-small"
+            ng-click="passwordForm.$valid && changePassword(oldPwd, newPwd)"
+            translate>Save password</button>
+        </div>
+      </form> 
+  </div>
+
 </div>
