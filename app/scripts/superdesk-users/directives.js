@@ -160,7 +160,7 @@ define([
         }])
         .directive('sdChangePassword', ['api', 'notify', 'gettext', function(api, notify, gettext) {
             return {
-                link: function(scope) {
+                link: function(scope, element) {
                     scope.$watch('user', function() {
                         scope.oldPasswordInvalid = false;
                     });
