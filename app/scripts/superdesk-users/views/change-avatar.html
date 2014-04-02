@@ -13,10 +13,8 @@
         <input type="file" accept="image/*;capture=camera" ng-model="image" sd-image-preview="preview.url">
 
         <label>Click to capture <small>but first enamble me</small></label>
-
         <video autoplay sd-video-capture="preview.url"
-            style="max-width:300px;max-height:300px"
-            ></video>
+            style="max-width:300px;max-height:300px"></video>
 
         <div sd-crop data-src="preview.url" data-cords="cords"></div>
         <pre ng-show="cords">{{ cords }}</pre>

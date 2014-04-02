@@ -1,4 +1,4 @@
-define(['angular', 'bower_components/jcrop/js/jquery.Jcrop'], function(angular) {
+define(['angular', 'lodash', 'bower_components/jcrop/js/jquery.Jcrop'], function(angular, _) {
     'use strict';
 
     var URL = window.URL || window.webkitURL;
@@ -30,6 +30,12 @@ define(['angular', 'bower_components/jcrop/js/jquery.Jcrop'], function(angular) 
     });
 
     module.directive('sdVideoCapture', function() {
+
+        navigator.getMedia = (navigator.getUserMedia ||
+            navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia ||
+            navigator.msGetUserMedia);
+
         return {
             scope: {
                 sdVideoCapture: '='
@@ -41,16 +47,19 @@ define(['angular', 'bower_components/jcrop/js/jquery.Jcrop'], function(angular) 
 
                 elem.after(canvas);
 
-                navigator.webkitGetUserMedia({
-                    video: {
-                        mandatory: {
-                            minWidth: 500,
-                            minHeight: 500
-                        }
-                    }
+                navigator.getMedia({
+                    video: true,
+                    audio: false
                 }, function(stream) {
-                    elem.attr('src', URL.createObjectURL(stream));
                     localMediaStream = stream;
+                    if (navigator.mozGetUserMedia) {
+                        elem[0].mozSrcObject = stream;
+                    } else {
+                        elem[0].src = URL.createObjectURL(stream);
+                    }
+                    elem[0].play();
+                }, function(err) {
+                    console.error('There was an error when getting media: ' + err);
                 });
 
                 elem.click(function(e) {
@@ -82,6 +91,13 @@ define(['angular', 'bower_components/jcrop/js/jquery.Jcrop'], function(angular) 
                 height: '@'
             },
             link: function(scope, elem) {
+
+                var updateScope = _.throttle(function(c) {
+                    scope.$apply(function() {
+                        scope.cords = c;
+                    });
+                }, 100);
+
                 scope.$watch('src', function(src) {
                     elem.empty();
 
@@ -93,11 +109,7 @@ define(['angular', 'bower_components/jcrop/js/jquery.Jcrop'], function(angular) 
                                 minSize: [200, 200],
                                 trueSize: [this.width, this.height],
                                 setSelect: [0, 0, 200, 200],
-                                onChange: function(c) {
-                                    scope.$apply(function() {
-                                        scope.cords = c;
-                                    });
-                                }
+                                onChange: updateScope
                             });
                         };
                         $(img).css('max-width', '450px');
