@@ -57,7 +57,6 @@ define(['angular', 'lodash', 'bower_components/jcrop/js/jquery.Jcrop'], function
                     } else {
                         elem[0].src = URL.createObjectURL(stream);
                     }
-                    elem[0].play();
                 }, function(err) {
                     console.error('There was an error when getting media: ' + err);
                 });
@@ -96,14 +95,14 @@ define(['angular', 'lodash', 'bower_components/jcrop/js/jquery.Jcrop'], function
                     scope.$apply(function() {
                         scope.cords = c;
                     });
-                }, 100);
+                }, 300);
 
                 scope.$watch('src', function(src) {
                     elem.empty();
 
                     if (src) {
                         var img = new Image();
-                        img.onload = function () {
+                        img.onload = function() {
                             $(this).Jcrop({
                                 aspectRatio: 1.0,
                                 minSize: [200, 200],
