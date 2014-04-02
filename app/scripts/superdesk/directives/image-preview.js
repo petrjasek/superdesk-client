@@ -64,9 +64,10 @@ define(['angular'], function(angular) {
                 });
 
                 scope.$on('$destroy', function() {
-                    console.log('destroy');
-                    elem[0].pause();
-                    localMediaStream.stop();
+                    try {
+                        elem[0].pause();
+                        localMediaStream.stop();
+                    } catch(err) {}
                 });
             }
         };
