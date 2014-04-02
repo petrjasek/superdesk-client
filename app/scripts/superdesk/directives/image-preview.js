@@ -1,11 +1,11 @@
-define(['angular'], function(angular) {
+define(['angular', 'bower_components/jcrop/js/jquery.Jcrop'], function(angular) {
     'use strict';
 
     var URL = window.URL || window.webkitURL;
 
-    angular.module('superdesk')
+    var module = angular.module('superdesk');
 
-    .directive('sdImagePreview', function() {
+    module.directive('sdImagePreview', function() {
         return {
             scope: {
                 sdImagePreview: '='
@@ -27,9 +27,9 @@ define(['angular'], function(angular) {
                 });
             }
         };
-    })
+    });
 
-    .directive('sdVideoCapture', function() {
+    module.directive('sdVideoCapture', function() {
         return {
             scope: {
                 sdVideoCapture: '='
@@ -67,7 +67,44 @@ define(['angular'], function(angular) {
                     try {
                         elem[0].pause();
                         localMediaStream.stop();
-                    } catch(err) {}
+                    } catch (err) {}
+                });
+            }
+        };
+    });
+
+    module.directive('sdCrop', function() {
+        return {
+            scope: {
+                src: '=',
+                cords: '=',
+                width: '@',
+                height: '@'
+            },
+            link: function(scope, elem) {
+                scope.$watch('src', function(src) {
+                    elem.empty();
+
+                    if (src) {
+                        var img = new Image();
+                        img.onload = function () {
+                            $(this).Jcrop({
+                                aspectRatio: 1.0,
+                                minSize: [200, 200],
+                                trueSize: [this.width, this.height],
+                                setSelect: [0, 0, 200, 200],
+                                onChange: function(c) {
+                                    scope.$apply(function() {
+                                        scope.cords = c;
+                                    });
+                                }
+                            });
+                        };
+                        $(img).css('max-width', '450px');
+                        $(img).css('max-height', '450px');
+                        elem.append(img);
+                        img.src = src;
+                    }
                 });
             }
         };
