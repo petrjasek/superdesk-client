@@ -131,6 +131,17 @@ define([
                             type: 'user'
                         }
                     ]
+                })
+                .activity('edit.avatar', {
+                    label: gettext('Change avatar'),
+                    modal: true,
+                    controller: function($scope) {
+                        console.log('in activity');
+                    },
+                    templateUrl: 'scripts/superdesk-users/views/change-avatar.html',
+                    filters: [
+                        {action: 'edit', type: 'avatar'}
+                    ]
                 });
         }])
         .config(['resourceProvider', function(resourceProvider) {
