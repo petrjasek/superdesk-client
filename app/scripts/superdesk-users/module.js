@@ -80,7 +80,7 @@ define([
                     label: gettext('Users'),
                     priority: 100,
                     controller: require('./controllers/list'),
-                    templateUrl: 'scripts/superdesk-users/views/list.html',
+                    templateUrl: require.toUrl('./views/list.html'),
                     category: superdesk.MENU_MAIN,
                     reloadOnSearch: false,
                     filters: [
@@ -95,7 +95,7 @@ define([
                     label: gettext('Users profile'),
                     priority: 100,
                     controller: require('./controllers/edit'),
-                    templateUrl: 'scripts/superdesk-users/views/edit.html',
+                    templateUrl: require.toUrl('./views/edit.html'),
                     resolve: {
                         user: UserResolver
                     },
@@ -106,7 +106,7 @@ define([
                 .activity('/profile/', {
                     label: gettext('My Profile'),
                     controller: require('./controllers/edit'),
-                    templateUrl: 'scripts/superdesk-users/views/edit.html',
+                    templateUrl: require.toUrl('./views/edit.html'),
                     resolve: {
                         user: ['session', 'resource', function(session, resource) {
                             return resource.users.getByUrl(session.identity.href);
@@ -115,7 +115,7 @@ define([
                 })
                 .activity('/settings/user-roles', {
                     label: gettext('User Roles'),
-                    templateUrl: 'scripts/superdesk-users/views/settings.html',
+                    templateUrl: require.toUrl('./views/settings.html'),
                     controller: require('./controllers/settings'),
                     category: superdesk.MENU_SETTINGS,
                     priority: -500
@@ -135,10 +135,13 @@ define([
                 .activity('edit.avatar', {
                     label: gettext('Change avatar'),
                     modal: true,
-                    controller: function($scope) {
-                        console.log('in activity');
-                    },
-                    templateUrl: 'scripts/superdesk-users/views/change-avatar.html',
+                    controller: ['$scope', '$upload', function($scope, $upload) {
+                        $scope.upload = function(config) {
+                            console.log('upload', config);
+                            return $scope.resolve(config);
+                        };
+                    }],
+                    templateUrl: require.toUrl('./views/change-avatar.html'),
                     filters: [
                         {action: 'edit', type: 'avatar'}
                     ]
