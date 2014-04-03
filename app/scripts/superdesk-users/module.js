@@ -7,6 +7,7 @@ define([
     './controllers/list',
     './controllers/edit',
     './controllers/settings',
+    './controllers/changeAvatar',
     './directives'
 ], function(angular, require) {
     'use strict';
@@ -135,9 +136,8 @@ define([
                 .activity('edit.avatar', {
                     label: gettext('Change avatar'),
                     modal: true,
-                    controller: function($scope) {
-                        console.log('in activity');
-                    },
+                    controller: require('./controllers/changeAvatar'),
+                    cssClass: 'upload-avatar',
                     templateUrl: 'scripts/superdesk-users/views/change-avatar.html',
                     filters: [
                         {action: 'edit', type: 'avatar'}
