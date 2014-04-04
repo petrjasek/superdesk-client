@@ -6,25 +6,28 @@
 <div class="modal-body">
     <aside class="sidebar">
         <ul>
-            <li ng-class="{active: method == 'computer'}"><a href="" ng-click="setMethod('computer')" translate>Upload from Computer</a></li>
-            <li ng-class="{active: method == 'camera'}"><a href="" ng-click="setMethod('camera')" translate>Take a snapshot</a></li>
-            <li ng-class="{active: method == 'web'}"><a href="" ng-click="setMethod('web')" translate>Use Web URL</a></li>
+            <li ng-class="{active: method == 'computer'}" ng-click="setMethod('computer')"><a href="" translate>Upload from Computer</a><i class="icon-chevron-right"></i></li>
+            <li ng-class="{active: method == 'camera'}" ng-click="setMethod('camera')"><a href="" translate>Take a snapshot</a><i class="icon-chevron-right"></i></li>
+            <li ng-class="{active: method == 'web'}" ng-click="setMethod('web')"><a href="" translate>Use Web URL</a><i class="icon-chevron-right"></i></li>
         </ul>
     </aside>
 
     <section class="main">
         <div class="computer" ng-if="method == 'computer' && !preview.url">
-            <label translate>File</label>
-            <input type="file" accept="image/*;capture=camera"
-                ng-file-select="img = $files[0]"
-                sd-image-preview="preview.url"
-                data-file="img">
-
+            
             <div class="dropzone"
                 ng-file-drop="img = $files[0]"
                 sd-image-preview="preview.url"
                 data-file="img">
-                <h1 translate>Drop it here</h1>
+
+                <div class="text" translate>Drop it here</div>
+				
+				<div class="input-holder">
+	                <input type="file" accept="image/*;capture=camera"
+		                ng-file-select="img = $files[0]"
+		                sd-image-preview="preview.url"
+		                data-file="img">
+				</div>
             </div>
         </div>
 
