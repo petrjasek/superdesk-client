@@ -11,6 +11,10 @@
       "url": "http://www.gnu.org/licenses/gpl-3.0.txt"
     }
   ],
+  "dependencies": {
+    "express": "^4.0.0",
+    "logfmt": "^1.1.2"
+  },
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-angular-gettext": "~0.2.5",
@@ -34,7 +38,6 @@
     "load-grunt-config": "~0.7.0",
     "karma-ng-html2js-preprocessor": "~0.1.0",
     "grunt-jscs-checker": "~0.4.0",
-    "lodash": "~2.4.1",
     "karma-coverage": "~0.2.0",
     "grunt-karma-coveralls": "~2.4.0",
     "protractor": "~0.21.0",
@@ -42,7 +45,12 @@
     "grunt-usemin": "^2.1.0",
     "grunt-filerev": "^0.2.1"
   },
+  "main": "web.js",
   "scripts": {
-    "test": "grunt ci:travis"
+    "test": "grunt ci:travis",
+    "start": "node web.js"
+  },
+  "engines": {
+    "node": "0.10.x"
   }
 }
