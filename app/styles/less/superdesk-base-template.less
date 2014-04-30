@@ -185,7 +185,7 @@ body {
   overflow-y:visible;
   .transition( all 0.3s ease);
   overflow-x:hidden; 
-  &.sf-menu-open {
+  &.menu {
     left: @sf-main-menu-width !important;
   	.subnav-fixed {
   		left: @sf-main-menu-width !important;
@@ -196,7 +196,7 @@ body {
 
 @media screen and (max-width: 1180px) {
 	.main-background-container {
-	  &.sf-menu-open {
+	  &.menu {
 	  	right: -@sf-main-menu-width !important;
 	  	.subnav-fixed {
 	  		right: -@sf-main-menu-width !important;
@@ -206,7 +206,7 @@ body {
 }
 @media screen and (max-width: 320px) { 
 	.main-background-container {
-	  &.sf-menu-open {
+	  &.menu {
 	  	left: 260px !important;
 	  	right: -260px !important;
 	  	.subnav-fixed {
