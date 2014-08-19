@@ -74,7 +74,7 @@ define([
 				}
 			}
 
-			$rootScope.$on('$routeChangeSuccess', startPool);
-			$rootScope.$on('$locationChangeStart', stopPool);
+			//$rootScope.$on('$routeChangeSuccess', startPool);
+			//$rootScope.$on('$locationChangeStart', stopPool);
 		}]);
 });

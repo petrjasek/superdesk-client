@@ -28,7 +28,14 @@ define([
          * Test if an item is locked
          */
         this.isLocked = function(item) {
-            return item.lock_user && item.lock_user !== session.identity._id;
+            return item.lock_user && !this.isLockedByMe(item);
+        };
+
+        /**
+         * Test if an item is locked by current user
+         */
+        this.isLockedByMe = function(item) {
+            return item.lock_user && item.lock_user === session.identity._id;
         };
     }
 
@@ -91,6 +98,14 @@ define([
         var _item,
             confirm = new ConfirmDirty($scope);
 
+        function isEditable(item) {
+            if (lock.isLocked(item)) {
+                return false;
+            }
+
+            return !item._latest_version || item._latest_version === item._version;
+        }
+
         $scope.item = null;
         $scope.dirty = null;
         $scope.workqueue = workqueue.all();
@@ -103,20 +118,21 @@ define([
                 _item = workqueue.find({_id: $routeParams._id}) || workqueue.active;
                 lock.lock(_item)['finally'](function() {
                     $scope.item = _.create(_item);
-                    $scope.editable = !lock.isLocked(_item);
+                    $scope.editable = isEditable(_item);
                     workqueue.setActive(_item);
                 });
             }
         }
 
-        $scope.$watch('item', function(item, oldItem) {
-            if (item === oldItem) {
+        $scope.$watchCollection('item', function(item, oldItem) {
+            if (!oldItem) {
                 $scope.dirty = false;
                 return;
             }
-            $scope.editable = $scope.item._version === $scope.item._latest_version;
-            $scope.dirty = item && oldItem && item._id === oldItem._id;
-        }, true);
+
+            $scope.editable = isEditable(item);
+            $scope.dirty = !!oldItem;
+        });
 
         $scope.switchArticle = function(article) {
             workqueue.update($scope.item);
@@ -127,8 +143,9 @@ define([
     	$scope.save = function() {
             delete $scope.item._version;
     		api.archive.save(_item, $scope.item).then(function(res) {
-                workqueue.update($scope.item);
-                notify.success(gettext('Item updated.'));
+                notify.success(gettext('Item saved.'));
+                workqueue.update(_item);
+                $scope.item = _.create(_item);
                 $scope.dirty = false;
     		}, function(response) {
     			notify.error(gettext('Error. Item not updated.'));
@@ -137,7 +154,7 @@ define([
 
         $scope.close = function() {
             confirm.confirm().then(function() {
-                if ($scope.editable) {
+                if (lock.isLockedByMe($scope.item)) {
                     lock.unlock($scope.item);
                 }
 
