@@ -116,6 +116,16 @@ define([
             };
 
             /**
+             * Delete an item
+             */
+            Resource.prototype.remove = function(item) {
+                return http({
+                    method: 'DELETE',
+                    url: urls.item(item._links.self.href)
+                });
+            };
+
+            /**
              * Get an item by _id
              *
              * @param {String} _id

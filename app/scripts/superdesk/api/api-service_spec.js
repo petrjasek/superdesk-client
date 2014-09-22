@@ -422,5 +422,11 @@ define([
             $httpBackend.flush();
             expect(user._id).toBe(1);
         }));
+
+        it('can delete an item', inject(function(api, $httpBackend) {
+            $httpBackend.expectDELETE(USER_URL).respond(200);
+            api('users').remove({_links: {self: {href: USER_PATH}}});
+            $httpBackend.flush();
+        }));
     });
 });

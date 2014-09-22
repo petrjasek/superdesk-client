@@ -126,14 +126,12 @@ define([
                 };
 
                 scope.remove = function(stage) {
-                    //stil not suported in API
-
-                    // api('content_view').remove(stage)
-                    // .then(function(result) {
-                    //     _.remove(scope.stages, stage);
-                    // }, function(response) {
-                    //     console.log(response);
-                    // });
+                    api('content_view').remove(stage)
+                        .then(function(result) {
+                            _.remove(scope.stages, stage);
+                        }, function(response) {
+                            console.error(response);
+                        });
                 };
             }
         };
