@@ -123,7 +123,7 @@ define([
         require('./directives').name,
         'superdesk.dashboard',
         'superdesk.widgets.archive'
-        ])
+    ])
 
         .service('spike', SpikeService)
         .service('contentQuery', ContentQueryBuilder)
@@ -153,6 +153,7 @@ define([
                 .activity('spike', {
                     label: gettext('Spike Item'),
                     icon: 'remove',
+                    privileges: {spike: 1},
                     controller: ['spike', 'data', function spikeActivity(spike, data) {
                         return spike.spike(data.item);
                     }],
@@ -161,6 +162,7 @@ define([
                 .activity('unspike', {
                     label: gettext('Unspike Item'),
                     icon: 'revert',
+                    privileges: {unspike: 1},
                     controller: ['spike', 'data', function unspikeActivity(spike, data) {
                         return spike.unspike(data.item);
                     }],
