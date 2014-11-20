@@ -118,7 +118,7 @@ define([
              */
             betaService.isBeta().then(function(beta) {
                 _.forEach(activities, function(activity, id) {
-                    if (activity.beta === true && beta === false) {
+                    if ((activity.beta === true && !beta) || !isAllowed(activity, beta)) {
                         $routeProvider.when(activity.when, {redirectTo: '/workspace'});
                     }
                 });
