@@ -55,6 +55,7 @@ tests.push('superdesk-archive/module');
 tests.push('bower_components/ment.io/dist/mentio');
 tests.push('angular-gettext');
 tests.push('angular-ui');
+tests.push('angular-route');
 
 requirejs.config({
     baseUrl: '/base/app/scripts',

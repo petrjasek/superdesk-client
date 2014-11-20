@@ -1,8 +1,4 @@
-define([
-    './superdesk-service',
-    './activity',
-    'angular-route'
-], function(superdeskProvider) {
+(function() {
     'use strict';
 
     describe('Superdesk service', function() {
@@ -18,24 +14,20 @@ define([
             filters: [intent]
         };
 
-        beforeEach(function() {
-            module('ngRoute');
-            module('superdesk.activity');
-            module(function($provide) {
-                provider = $provide.provider('superdesk', superdeskProvider);
+        angular.module('superdesk.activity.test', ['superdesk.activity'])
+            .config(function(superdeskProvider) {
+                provider = superdeskProvider;
                 provider.widget('testWidget', testWidget);
                 provider.pane('testPane', testPane);
                 provider.activity('testActivity', testActivity);
-
                 provider.activity('missingFeatureActivity', {
                     features: {missing: 1},
                     filters: [{action: 'test', type: 'features'}]
                 });
-
-                $provide.value('features', {});
             });
-        });
 
+        beforeEach(module('superdesk.activity'));
+        beforeEach(module('superdesk.activity.test'));
         beforeEach(module('superdesk.mocks'));
 
         it('exists', inject(function(superdesk) {
@@ -100,4 +92,4 @@ define([
             expect(list.length).toBe(0);
         }));
     });
-});
+})();
