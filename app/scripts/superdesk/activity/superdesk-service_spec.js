@@ -11,7 +11,8 @@
             controller: function() {
                 return 'test';
             },
-            filters: [intent]
+            filters: [intent],
+            category: 'superdesk.menu.main'
         };
 
         angular.module('superdesk.activity.test', ['superdesk.activity'])
@@ -21,8 +22,14 @@
                 provider.pane('testPane', testPane);
                 provider.activity('testActivity', testActivity);
                 provider.activity('missingFeatureActivity', {
+                    category: superdeskProvider.MENU_MAIN,
                     features: {missing: 1},
                     filters: [{action: 'test', type: 'features'}]
+                });
+                provider.activity('missingPrivilegeActivity', {
+                    category: superdeskProvider.MENU_MAIN,
+                    privileges: {missing: 1},
+                    filters: [{action: 'test', type: 'privileges'}]
                 });
             });
 
@@ -90,6 +97,26 @@
         it('can check features required by activity', inject(function(superdesk, features) {
             var list = superdesk.findActivities({type: 'features', action: 'test'});
             expect(list.length).toBe(0);
+        }));
+
+        it('can filter activities based on privileges', inject(function(superdesk, privileges) {
+            var list = superdesk.findActivities({type: 'privileges', action: 'test'});
+            expect(list.length).toBe(0);
+
+            privileges.setUserPrivileges({missing: 1});
+            list = superdesk.findActivities({type: 'privileges', action: 'test'});
+            expect(list.length).toBe(1);
+        }));
+
+        it('can get main menu and filter out based on features/permissions', inject(function(superdesk, $rootScope) {
+
+            var menu;
+            superdesk.getMenu(superdesk.MENU_MAIN).then(function(_menu) {
+                menu = _menu;
+            });
+
+            $rootScope.$digest();
+            expect(menu.length).toBe(1);
         }));
     });
 })();

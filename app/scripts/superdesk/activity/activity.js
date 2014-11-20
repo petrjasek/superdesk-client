@@ -78,7 +78,8 @@ define([
                 beta: false,
                 reloadOnSearch: false,
                 auth: true,
-                features: {}
+                features: {},
+                privileges: {}
             }, activityData);
 
             var actionless = _.find(activity.filters, function(filter) {
@@ -109,8 +110,8 @@ define([
             return this;
         };
 
-        this.$get = ['$q', '$route', '$rootScope', 'activityService', 'activityChooser', 'betaService', 'features',
-        function($q, $route, $rootScope, activityService, activityChooser, betaService, features) {
+        this.$get = ['$q', '$route', '$rootScope', 'activityService', 'activityChooser', 'betaService', 'features', 'privileges',
+        function superdeskFactory($q, $route, $rootScope, activityService, activityChooser, betaService, features, privileges) {
 
             /**
              * Render main menu depending on registered acitivites
@@ -138,6 +139,20 @@ define([
                     isMatch = isMatch && features[key] && val;
                 });
                 return isMatch;
+            }
+
+            function checkPrivileges(activity) {
+                return privileges.userHasPrivileges(activity.privileges);
+            }
+
+            /**
+             * Test if user is allowed to use given activity.
+             *   Testing is based on current server setup (features) and user privileges.
+             *
+             * @param {Object} activity
+             */
+            function isAllowed(activity) {
+                return checkFeatures(activity) && checkPrivileges(activity);
             }
 
             return angular.extend({
@@ -182,7 +197,7 @@ define([
                         criteria.type = intent.type;
                     }
                     return _.filter(this.activities, function(activity) {
-                        return _.find(activity.filters, criteria) && checkFeatures(activity);
+                        return _.find(activity.filters, criteria) && isAllowed(activity);
                     });
                 },
 
@@ -214,6 +229,22 @@ define([
                         ].join(':'), intent);
                         return $q.reject();
                     });
+                },
+
+                /**
+                 * Get activities based on menu category
+                 *
+                 * @param {string} category
+                 */
+                getMenu: function getMenu(category) {
+                    var menu = [];
+                    angular.forEach(activities, function(activity) {
+                        if (activity.category === category && isAllowed(activity)) {
+                            menu.push(activity);
+                        }
+                    });
+
+                    return $q.when(menu);
                 }
             }, constans);
         }];
@@ -225,7 +256,8 @@ define([
         'superdesk.features',
         'superdesk.translate',
         'superdesk.services.beta',
-        'superdesk.services.modal'
+        'superdesk.services.modal',
+        'superdesk.privileges'
     ]);
 
     module.provider('superdesk', SuperdeskProvider);
