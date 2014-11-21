@@ -692,8 +692,8 @@
             };
         }])
 
-        .directive('sdUserEdit', ['gettext', 'notify', 'users', 'session', '$location', '$route', 'superdesk', 'features', 'asset',
-        function(gettext, notify, users, session, $location, $route, superdesk, features, asset) {
+        .directive('sdUserEdit', ['api', 'gettext', 'notify', 'users', 'session', '$location', '$route', 'superdesk', 'features', 'asset',
+        function(api, gettext, notify, users, session, $location, $route, superdesk, features, asset) {
 
             return {
                 templateUrl: asset.templateUrl('superdesk-users/views/edit-form.html'),
@@ -718,6 +718,10 @@
                             }
                         });
                         scope.dirty = !angular.equals(user, scope.origUser);
+                    });
+
+                    api('roles').query().then(function(result) {
+                        scope.roles = result._items;
                     });
 
                     scope.cancel = function() {
