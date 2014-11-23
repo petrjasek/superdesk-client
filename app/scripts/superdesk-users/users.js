@@ -165,6 +165,14 @@
         $scope.selected = {user: null};
         $scope.createdUsers = [];
 
+        api('roles').query().then(function(result) {
+            $scope.roles = _.indexBy(result._items, '_id');
+        });
+
+        $scope.isEmpty = function(object) {
+            return _.isEmpty(object);
+        };
+
         $scope.preview = function(user) {
             $scope.selected.user = user;
         };
@@ -956,6 +964,7 @@
             return {
                 templateUrl: asset.templateUrl('superdesk-users/views/user-list-item.html'),
                 scope: {
+                    roles: '=',
                     users: '=',
                     selected: '=',
                     done: '='
