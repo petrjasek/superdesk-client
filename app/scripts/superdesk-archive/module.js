@@ -138,7 +138,8 @@ define([
                     topTemplateUrl: require.toUrl('../superdesk-dashboard/views/workspace-topnav.html'),
                     filters: [
                         {action: 'view', type: 'content'}
-                    ]
+                    ],
+                    privileges: {archive: 1}
                 })
                 .activity('upload.media', {
                     label: gettext('Upload media'),
@@ -148,25 +149,26 @@ define([
                     templateUrl: require.toUrl('./views/upload.html'),
                     filters: [
                         {action: 'upload', type: 'media'}
-                    ]
+                    ],
+                    privileges: {archive: 1}
                 })
                 .activity('spike', {
                     label: gettext('Spike Item'),
                     icon: 'remove',
-                    privileges: {spike: 1},
                     controller: ['spike', 'data', function spikeActivity(spike, data) {
                         return spike.spike(data.item);
                     }],
-                    filters: [{action: superdesk.ACTION_EDIT, type: 'archive'}]
+                    filters: [{action: superdesk.ACTION_EDIT, type: 'archive'}],
+                    privileges: {spike: 1}
                 })
                 .activity('unspike', {
                     label: gettext('Unspike Item'),
                     icon: 'revert',
-                    privileges: {unspike: 1},
                     controller: ['spike', 'data', function unspikeActivity(spike, data) {
                         return spike.unspike(data.item);
                     }],
-                    filters: [{action: superdesk.ACTION_EDIT, type: 'spike'}]
+                    filters: [{action: superdesk.ACTION_EDIT, type: 'spike'}],
+                    privileges: {unspike: 1}
                 });
         }])
 

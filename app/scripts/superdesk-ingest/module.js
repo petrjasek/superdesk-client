@@ -73,13 +73,15 @@ define([
                 controller: require('./controllers/list'),
                 templateUrl: require.toUrl('../superdesk-archive/views/list.html'),
                 category: '/workspace',
-                topTemplateUrl: require.toUrl('../superdesk-dashboard/views/workspace-topnav.html')
+                topTemplateUrl: require.toUrl('../superdesk-dashboard/views/workspace-topnav.html'),
+                privileges: {ingest: 1}
             })
             .activity('/settings/ingest', {
                 label: gettext('Ingest Feed'),
                 templateUrl: require.toUrl('./views/settings/settings.html'),
                 controller: require('./controllers/settings'),
-                category: superdesk.MENU_SETTINGS
+                category: superdesk.MENU_SETTINGS,
+                privileges: {ingest_providers: 1}
             })
             .activity('archive', {
                 label: gettext('Fetch'),
@@ -131,7 +133,8 @@ define([
                 }],
                 filters: [
                     {action: 'archive', type: 'ingest'}
-                ]
+                ],
+                privileges: {ingest: 1}
             });
     }]);
 
