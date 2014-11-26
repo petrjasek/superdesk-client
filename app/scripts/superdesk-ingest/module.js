@@ -134,7 +134,7 @@ define([
                 filters: [
                     {action: 'archive', type: 'ingest'}
                 ],
-                privileges: {ingest: 1}
+                privileges: {ingest_move: 1}
             });
     }]);
 
