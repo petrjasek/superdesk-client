@@ -46,7 +46,7 @@
                     var filters = [];
 
                     if (item.slugline) {
-                        filters.push({term: {slugline: item.slugline}});
+                        filters.push({not: {term: {slugline: item.slugline}}});
                     }
 
                     if (item.subject && item.subject.length) {
