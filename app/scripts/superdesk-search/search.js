@@ -41,7 +41,8 @@
          */
         function Query() {
             var size = 25,
-                filters = [];
+                filters = [],
+                _query;
 
             /**
              * Set from/size for given query and params
@@ -76,9 +77,7 @@
                 }
 
                 if (params.type) {
-                    var type = {
-                        type: JSON.parse(params.type)
-                    };
+                    var type = {type: JSON.parse(params.type)};
                     query.filter({terms: type});
                 }
 
@@ -103,25 +102,35 @@
                 }
             }
 
+            function setQuery(criteria, query) {
+                criteria.query.filtered.query = query;
+            }
+
+            function setSort(criteria, sort) {
+                criteria.sort = [_.zipObject([sort.field], [sort.dir])];
+            }
+
             /**
              * Get criteria for given query
              */
             this.getCriteria = function getCriteria(withSource) {
                 var search = $location.search();
-                var sort = getSort();
                 var criteria = {
-                    query: {filtered: {filter: {and: filters}}},
-                    sort: [_.zipObject([sort.field], [sort.dir])]
+                    query: {filtered: {filter: {and: filters}}}
                 };
 
                 paginate(criteria, search);
 
-                if (search.q) {
-                    criteria.query.filtered.query = {query_string: {
-                        query: search.q,
-                        lenient: false,
-                        default_operator: 'AND'
-                    }};
+                if (_query) {
+                    setQuery(criteria, _query);
+                } else if (search.q) {
+                    this.q(search.q);
+                    setQuery(criteria, _query);
+                }
+
+                if (search.sort || !_query) {
+                    // set sort if set explicit or use also default if there is no query
+                    setSort(criteria, getSort());
                 }
 
                 if (withSource) {
@@ -154,6 +163,31 @@
                 return this;
             };
 
+            /**
+             * Set custom query
+             *
+             * @param {Object} query
+             */
+            this.query = function setQuery(query) {
+                _query = query;
+                return this;
+            };
+
+            /**
+             * Set query string query
+             *
+             * @param {string} q
+             */
+            this.q = function setQueryStringQuery(q) {
+                return this.query({
+                    query_string: {
+                        query: q,
+                        lenient: false,
+                        default_operator: 'AND'
+                    }
+                });
+            };
+
             // do base filtering
             if ($location.search().spike) {
                 this.filter({term: {is_spiked: true}});
@@ -170,7 +204,13 @@
          * @param {string} q
          */
         this.query = function createQuery(q) {
-            return new Query(q);
+            var query = new Query();
+
+            if (q) {
+                query.q(q);
+            }
+
+            return query;
         };
     }
 

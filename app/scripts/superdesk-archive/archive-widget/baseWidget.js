@@ -11,6 +11,7 @@
                 var config;
                 var refresh = _.debounce(_refresh, 1000);
                 var pinnedList = {};
+                $scope.search = {};
 
                 $scope.selected = null;
                 preferencesService.get('pinned:items').then(function(result) {
@@ -29,9 +30,8 @@
                 $scope.$watchGroup([
                     'widget.configuration.provider',
                     'widget.configuration.maxItems',
-                    'query || widget.configuration.search',
-                    'item',
-                    'headline'
+                    'search.query || widget.configuration.search',
+                    'item'
                 ], function(vals) {
                     config = {
                         provider: vals[0],
@@ -42,20 +42,6 @@
                     refresh();
                 });
 
-                function moreLikeThis(item) {
-                    var filters = [];
-
-                    if (item.slugline) {
-                        filters.push({not: {term: {slugline: item.slugline}}});
-                    }
-
-                    if (item.subject && item.subject.length) {
-                        filters.push({terms: {'subject.code': _.pluck(item.subject, 'code')}});
-                    }
-
-                    return filters;
-                }
-
                 function getSearchCriteria(config) {
                     var query = search.query(config.search || null);
                     query.size(config.size || 10);
@@ -65,12 +51,15 @@
                     }
 
                     if (config.item && !config.search) {
-                        var itemFilters = moreLikeThis(config.item);
-                        if (itemFilters.length) {
-                            query.filter({or: itemFilters});
-                        } else {
-                            query.q(config.item.headline || null);
-                        }
+                        query.query({
+                            more_like_this: {
+                                fields: ['slugline', 'headline'],
+                                like_text: config.item.headline,
+                                ids: [config.item._id],
+                                min_term_freq: 1,
+                                min_doc_freq: 3
+                            }
+                        });
                     }
 
                     return query.getCriteria();

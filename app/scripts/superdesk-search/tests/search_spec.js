@@ -18,11 +18,23 @@ describe('search service', function() {
         $rootScope.$digest();
         var criteria = search.query().getCriteria();
         expect(criteria.query.filtered.query.query_string.query).toBe('test');
+
+        var query = search.query();
+        query.q('foo');
+        criteria = query.getCriteria();
+        expect(criteria.query.filtered.query.query_string.query).toBe('foo');
     }));
 
     it('can set size', inject(function(search) {
         var criteria = search.query().size(10).getCriteria();
         expect(criteria.size).toBe(10);
+    }));
+
+    it('can create specific query', inject(function(search) {
+        var query = search.query();
+        query.query({term: {foo: 'bar'}});
+        var criteria = query.getCriteria();
+        expect(criteria.query.filtered.query.term.foo).toBe('bar');
     }));
 
     it('can sort items', inject(function(search, $location, $rootScope) {
